@@ -21,7 +21,6 @@ var minBrushSize = 1;
 var brushDensity = 5;
 
 var showDebug = true;
-var showSimplifiedLines = false;
 
 // Jitter smoothing parameters
 // See: http://cristal.univ-lille.fr/~casiez/1euro/
@@ -47,6 +46,7 @@ var newLineToDraw = false;
 var allPoints = [];
 var reducedPoints = [];
 var lines = [];
+var redoStack = [];
 var epsilon = 15;
 const IP = '184.105.174.119';
 const PORT = '8000';
@@ -87,10 +87,10 @@ new p5(function (p) {
   p.mouseReleased = function () {
     if (reducedPoints.length > 0) {
       lines.push(reducedPoints);
+      redoStack = [];
       reducedPoints = [];
     }
     allPoints = [];
-    sendToRunway((p.windowWidth - sideBarOffset)/2, p.windowHeight, sideBarOffset);
   }
 
   p.draw = function () {
@@ -141,39 +141,57 @@ new p5(function (p) {
       // Draw an ellipse at the latest position
       reducedPoints = simplifyLine(allPoints);
       p.noStroke();
-      p.fill(10)
-      p.ellipse(penX, penY, brushSize);
+      p.fill(100);
+      // p.ellipse(penX, penY, brushSize);
 
-      if (showSimplifiedLines) {
-        lines.forEach((line) => {
-          p.stroke(255, 0, 255);
-          p.strokeWeight(2);
-          p.noFill();
-          p.beginShape();
-          line.forEach(v => {
-            if (v) {
-              p.vertex(v.x, v.y);
-            }
-          });
-          p.endShape();
-        });
-      }
 
       // Save the latest brush values for next frame
-      prevBrushSize = brushSize; 
+      prevBrushSize = brushSize;
       prevPenX = penX;
       prevPenY = penY;
-      
+
       isDrawingJustStarted = false;
     }
 
+    if (!isDrawing) {
+      p.clear();
+      p.background(255);
+      lines.forEach((line) => {
+        p.stroke(0);
+        p.strokeWeight(2);
+        p.noFill();
+        p.beginShape();
+        line.forEach(v => {
+          if (v) {
+            p.vertex(v.x, v.y);
+          }
+        });
+        p.endShape();
+      });
+    }
     // clearing the canvas
     document.getElementById("ClearButton").onclick = function () { clearCanvas() };
+    document.getElementById("undo").onclick = function () { undo() };
+    document.getElementById("redo").onclick = function () { redo() };
 
     function clearCanvas() {
       lines = [];
       p.clear();
       p.background(255);
+    }
+
+    function undo() {
+      if (lines.length > 0) {
+        let item = lines.pop();
+        redoStack.push(item);
+      }
+    }
+
+    function redo() {
+      if (redoStack.length > 0) {
+        let item = redoStack.pop();
+        lines.push(item);
+      }
     }
 
     // document.getElementById("to3DModel").onclick =  () => {
