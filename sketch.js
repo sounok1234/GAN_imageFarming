@@ -47,7 +47,6 @@ var allPoints = [];
 var reducedPoints = [];
 var lines = [];
 var redoStack = [];
-var epsilon = 15;
 const IP = '184.105.174.119';
 const PORT = '8000';
 let sideBarStyle = getComputedStyle(document.getElementsByClassName('sidenav')[0]);
@@ -260,64 +259,6 @@ function disableScroll() {
 function enableScroll(){
     document.body.removeEventListener('touchmove', preventDefault, { passive: false });
 }*/
-
-function rdp(startIndex, endIndex, allPoints, rdpPoints) {
-  const nextIndex = findFurthest(allPoints, startIndex, endIndex);
-  if (nextIndex > 0) {
-    if (startIndex != nextIndex) {
-      rdp(startIndex, nextIndex, allPoints, rdpPoints);
-    }
-    rdpPoints.push(allPoints[nextIndex]);
-    if (endIndex != nextIndex) {
-      rdp(nextIndex, endIndex, allPoints, rdpPoints);
-    }
-  }
-}
-
-function findFurthest(points, a, b) {
-  let recordDistance = -1;
-  const start = points[a];
-  const end = points[b];
-  let furthestIndex = -1;
-  for (let i = a + 1; i < b; i++) {
-    const currentPoint = points[i];
-    const d = lineDist(currentPoint, start, end);
-    if (d > recordDistance) {
-      recordDistance = d;
-      furthestIndex = i;
-    }
-  }
-  if (recordDistance > epsilon) {
-    return furthestIndex;
-  } else {
-    return -1;
-  }
-}
-
-function lineDist(c, a, b) {
-  const norm = scalarProjection(c, a, b);
-  return p5.Vector.dist(c, norm);
-}
-
-function scalarProjection(p, a, b) {
-  const ap = p5.Vector.sub(p, a);
-  const ab = p5.Vector.sub(b, a);
-  ab.normalize(); // Normalize the line
-  ab.mult(ap.dot(ab));
-  const normalPoint = p5.Vector.add(a, ab);
-  return normalPoint;
-}
-
-function simplifyLine(allPts) {
-  pts = [];
-  const total = allPts.length;
-  const start = allPts[0];
-  const end = allPts[total - 1];
-  pts.push(start);
-  rdp(0, total - 1, allPts, pts);
-  pts.push(end);
-  return pts;
-}
 
 function canvasToModel() {
   let linesForBackend = [];
