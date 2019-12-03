@@ -175,6 +175,7 @@ new p5(function (p) {
     document.getElementById("redo").onclick = function () { redo() };
 
     function clearCanvas() {
+      redoStack = lines;
       lines = [];
       p.clear();
       p.background(255);
