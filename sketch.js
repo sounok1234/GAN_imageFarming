@@ -52,6 +52,7 @@ const IP = '184.105.174.119';
 const PORT = '8000';
 let sideBarStyle = getComputedStyle(document.getElementsByClassName('sidenav')[0]);
 let sideBarOffset = parseFloat(sideBarStyle.width) + parseFloat(sideBarStyle.paddingLeft) + parseFloat(sideBarStyle.paddingRight);
+let _draggingImage = false;
 
 /***********************
 *    DRAWING CANVAS    *
@@ -69,41 +70,37 @@ new p5(function(p) {
     disableScroll();
     
     //Initialize the canvas
-    drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset)/2, p.windowHeight);
+    drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset), p.windowHeight);
     drawCanvas.id("drawingCanvas");
     p.background(255);
     drawCanvas.position(sideBarOffset, 0);    
-    drawCanvasElement = document.getElementById('drawingCanvas');
-    drawCanvasElement.addEventListener('pre-img-upload', () => {
-      lines = [];
-      p.clear();
-      p.background(255);
-    });
+    
+    /*
     drawCanvasElement.addEventListener('img-upload', () => {
       sendToRunway((p.windowWidth - sideBarOffset)/2, p.windowHeight, sideBarOffset);
     });
+    */
   }
-
+  /*
   p.mouseReleased = function () {
     if (reducedPoints.length > 0) {
       lines.push(reducedPoints);
       reducedPoints = [];
     }
     allPoints = [];
-    sendToRunway((p.windowWidth - sideBarOffset)/2, p.windowHeight, sideBarOffset);
+    //sendToRunway((p.windowWidth - sideBarOffset)/2, p.windowHeight, sideBarOffset);
   }
-
-  p.draw = function() {
-    
+  */
+  p.draw = function() { 
+    if (p.mouseIsPressed === true && _draggingImage == false) {
     // Start Pressure.js if it hasn't started already
     if(isPressureInit == false){
       initPressure();
     }
-      
-    
+        
     if(isDrawing) {      
       // Smooth out the position of the pointer 
-      penX = xFilter.filter(p.mouseX, p.millis());
+      penX = xFilter.filter(p.mouseX, p.millis()); 
       penY = yFilter.filter(p.mouseY, p.millis());
       
       // What to do on the first frame of the stroke
@@ -143,7 +140,7 @@ new p5(function(p) {
       p.noStroke();
       p.fill(10)
       p.ellipse(penX, penY, brushSize);
-
+      
       if (showSimplifiedLines) {
         lines.forEach((line) => {
           p.stroke(255, 0, 255);
@@ -158,7 +155,6 @@ new p5(function(p) {
           p.endShape();
         });
       }
-
       // Save the latest brush values for next frame
       prevBrushSize = brushSize; 
       prevPenX = penX;
@@ -175,51 +171,12 @@ new p5(function(p) {
       p.clear();
       p.background(255);
     }
-
     // document.getElementById("to3DModel").onclick =  () => {
     //   sendToRunway((p.windowWidth - 180)/2, p.windowHeight);
     // };
-
-    
-    
   }
-}, "p5_instance_01");
-
-
-
-/***********************
-*      UI CANVAS       *
-************************/
-// new p5(function(p) {
-
-//   	p.setup = function() {
-//       uiCanvas = p.createCanvas(p.windowWidth - 180, p.windowHeight);
-//       uiCanvas.id("uiCanvas");
-//       uiCanvas.position(180, 0);
-//     }
-  
-// //   	p.draw = function() {
-      
-// //       uiCanvas.clear();
-      
-// //       // if(showDebug){
-// //       //   p.text("pressure = " + pressure, 10, 20);
-        
-// //       //   p.stroke(200,50);
-// //       //   p.line(p.mouseX,0,p.mouseX,p.height);
-// //       //   p.line(0,p.mouseY,p.width,p.mouseY);
-
-// //       //   // The "loading bar" at the top
-// //       //   // is only there as a visual indicator
-// //       //   // that the sketch is running
-// //       //   p.noStroke();
-// //       //   p.fill(100)
-// //       //   p.rect(0, 0, p.frameCount % p.width, 4);
-// //       // }
-// //     }
-
-// }, "p5_instance_02");
-
+}
+}, "canvas1");
 
 /***********************
 *       UTILITIES      *
@@ -263,7 +220,6 @@ function initPressure() {
  		 });
   
 }
-
 
 // Disabling scrolling and bouncing on iOS Safari
 // https://stackoverflow.com/questions/7768269/ipad-safari-disable-scrolling-and-bounce-effect
@@ -337,7 +293,7 @@ function simplifyLine(allPts) {
   pts.push(end);
   return pts;
 }
-
+/*
 function canvasToModel() {
   let linesForBackend = [];
   lines.forEach(line => {
@@ -390,3 +346,4 @@ function sendToRunway(w, h, sideBarOffset) {
       img.src = image;
     });
 } 
+*/
