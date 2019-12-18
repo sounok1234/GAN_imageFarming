@@ -51,7 +51,6 @@ const IP = '184.105.174.119';
 const PORT = '8000';
 let sideBarStyle = getComputedStyle(document.getElementsByClassName('sidenav')[0]);
 let sideBarOffset = parseFloat(sideBarStyle.width) + parseFloat(sideBarStyle.paddingLeft) + parseFloat(sideBarStyle.paddingRight);
-let _draggingImage = false;
 
 /***********************
 *    DRAWING CANVAS    *
@@ -69,7 +68,6 @@ new p5(function (p) {
     disableScroll();
 
     //Initialize the canvas
-
     drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset) / 2, p.windowHeight);
     drawCanvas.id("drawingCanvas");
     p.background(255);
@@ -85,6 +83,7 @@ new p5(function (p) {
       sendToRunway((p.windowWidth - sideBarOffset) / 2, p.windowHeight, sideBarOffset);
     });
   }
+
   p.mouseReleased = function () {
     if (reducedPoints.length > 0) {
       lines.push(reducedPoints);
@@ -102,11 +101,9 @@ new p5(function (p) {
       initPressure();
     }
 
-
-
     if (isDrawing) {
       // Smooth out the position of the pointer 
-      penX = xFilter.filter(p.mouseX, p.millis()); 
+      penX = xFilter.filter(p.mouseX, p.millis());
       penY = yFilter.filter(p.mouseY, p.millis());
 
       // What to do on the first frame of the stroke
@@ -144,7 +141,6 @@ new p5(function (p) {
       // Draw an ellipse at the latest position
       reducedPoints = simplifyLine(allPoints);
       p.noStroke();
-
       p.fill(100);
       // p.ellipse(penX, penY, brushSize);
 
@@ -183,7 +179,6 @@ new p5(function (p) {
       p.clear();
       p.background(255);
     }
-
 
     function undo() {
       if (lines.length > 0) {

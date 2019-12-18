@@ -1,36 +1,31 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html><html>
+  <head>
     <script src="p5.min.js"></script>
-    
     <script src="p5.dom.min.js"></script>
     <script src="pressure.min.js"></script>
     <script src="oneEuroFilter.min.js"></script>
-    
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
-    
-
   </head>
-  <body>
+    <body>
     <div class="sidenav">
       <!-- Icons on the side bar -->
       <!-- Change this with the final app logo whn ready -->
       <button id="ClearButton" type="button"><img src="icon/draw.svg"/></button>
-      <button id="myFileInput" type="button"><img src="icon/uploadV2.svg" /></button>
+      <button id="uploadButton" type="button"><img src="icon/uploadV2.svg" /></button>
       <button id="undo" type="button"><img src="icon/undo-solid.svg" /></button>
       <button id="redo" type="button"><img src="icon/redo-solid.svg" /></button>
       <button onclick="PopWindowOne()" id="to3DModel" type="button"><img src="icon/to3dModel.svg" /></button>
-      <input type="file" id="mypic" style="display: none" accept="image/*" capture="camera"/>
-      
+      <input type="file" id="imageInput" style="display: none" accept="image/*" capture="camera"/>
     </div>
 
     <div class="main">
       <div class = "imageContainer" id="container">
-        <img src="" id="image_preview">
+        <img src="" id="referenceImage">
       </div>
       <script src="rdp.js"></script>
       <script src="importImageFile.js"></script>
       <script src="sketch.js"></script>
     </div>
-
-</body>
+  </body>
 </html>

@@ -1,66 +1,61 @@
-let draggingImage = false;
-
-document.querySelector("#myFileInput").onclick = () => {
-  document.querySelector("#mypic").click();
+// Connect upload button to hidden file input
+document.querySelector("#uploadButton").onclick = () => {
+  document.querySelector("#imageInput").click();
 };
 
-var input = document.querySelector("input[type=file]");
+// Handle file upload
+const input = document.querySelector("input[type=file]");
 input.onchange = function() {
-  var file = input.files[0];
-  drawOnCanvas(file);
+  const file = input.files[0];
+  showImage(file);
 };
 
-const container = document.getElementById("container");
-const previewImage = container.querySelector("#image_preview");
-const img = document.getElementById("image_preview");
-dragElement(previewImage);
+const referenceImage = container.querySelector("#referenceImage");
+const imageContainer = document.getElementById("container");
 
-function drawOnCanvas(file) {
-  var reader = new FileReader();
+function showImage(file) {
+  const reader = new FileReader();
 
   reader.addEventListener("load", async function() {
-    await previewImage.setAttribute("src", this.result);
-    container.style.display = "inherit";
-    dragElement(previewImage);
+    await referenceImage.setAttribute("src", this.result);
+    imageContainer.style.display = "inherit";
+    addTransformHandlers(referenceImage, imageContainer);
   });
 
   reader.readAsDataURL(file);
 }
 
-function dragElement(elmnt) {
-  var endX = 0,
-    endY = 0,
-    startX = 0,
-    startY = 0;
-  // otherwise, move the DIV from anywhere inside the DIV:
-  elmnt.onmousedown = dragMouseDown;
-  elmnt.addEventListener("touchstart", dragMouseDown, false);
+function addTransformHandlers(element, container) {
+  let endX = 0;
+  let endY = 0;
+  let startX = 0;
+  let startY = 0;
+  element.onmousedown = dragMouseDown;
+  element.addEventListener("touchstart", dragMouseDown, false);
   container.onmousedown = dragMouseDown;
   container.addEventListener("touchstart", dragMouseDown, false);
 
   function dragMouseDown(e) {
     e = e || window.event;
     e.preventDefault();
-    draggingImage = true;
     // get the mouse cursor position at startup:
     startX = e.clientX;
     startY = e.clientY;
+
+    // call a function whenever the cursor moves:
     if (e.type === "touchstart") {
       document.addEventListener("touchend", closeDragElement, false);
     } else {
       document.onmouseup = closeDragElement;
     }
-    // call a function whenever the cursor moves:
-    if (e.target == elmnt) {
+    if (e.target == element) {
       if (e.type === "touchstart") {
-        console.log('Adding touchmove to drag')
         document.addEventListener("touchmove", elementDrag, false);
       } else {
         document.onmousemove = elementDrag;
       }
     } else if (e.target == container) {
       if (e.type === "touchstart") {
-        console.log('Adding touchmove to resize')
         document.addEventListener("touchmove", resize, false);
       } else {
         document.onmousemove = resize;
@@ -71,10 +66,7 @@ function dragElement(elmnt) {
   function resize(e) {
     e = e || window.event;
     e.preventDefault();
-    console.log("elementResize function is being called", e);
     // calculate the new cursor position:
-    let relativeX;
-    let relativeY;
     if (e.type === "touchmove") {
       endX = (startX - e.touches[0].clientX) / 2;
       endY = (startY - e.touches[0].clientY) / 2;
@@ -89,9 +81,8 @@ function dragElement(elmnt) {
     // set the element's new position:
     const midHeight = container.clientHeight / 2;
     const midWidth = container.clientWidth / 2;
-    relativeX = startX - container.offsetLeft;
-    relativeY = startY - container.offsetTop;
-    console.log(relativeX, relativeY);
+    const relativeX = startX - container.offsetLeft;
+    const relativeY = startY - container.offsetTop;
     const isTop = relativeY < midHeight;
     const isBottom = relativeY >= midHeight;
     const isLeft = relativeX < midWidth;
@@ -120,12 +111,8 @@ function dragElement(elmnt) {
   function elementDrag(e) {
     e = e || window.event;
     e.preventDefault();
-    console.log("elementDrag function is being called");
     // calculate the new cursor position:
     if (e.type === "touchmove") {
-      //let clientX = Array.from(e.touches).map(touch => touch.clientX);
-      //let clientY = Array.from(e.touches).map(touch => touch.clientY);
-      //console.log(clientX, clientY);
       endX = (startX - e.touches[0].clientX) / 2;
       endY = (startY - e.touches[0].clientY) / 2;
       startX = e.touches[0].clientX;
@@ -137,7 +124,6 @@ function dragElement(elmnt) {
       startY = e.clientY;
     }
     // set the element's new position:
-    var leftShift = container.offsetLeft - endX;
     container.style.top = container.offsetTop - endY + "px";
     container.style.left = container.offsetLeft - endX + "px";
   }
@@ -149,8 +135,6 @@ function dragElement(elmnt) {
     document.removeEventListener("touchmove", elementDrag);
     document.removeEventListener("touchmove", resize);
     document.removeEventListener("touchend", closeDragElement);
-    draggingImage = false;
   }
-
 
 }
