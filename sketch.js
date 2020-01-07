@@ -78,6 +78,7 @@ new p5(function (p) {
       p.clear();
       p.background(255);
     });
+    
     drawCanvasElement.addEventListener('img-upload', () => {
       sendToRunway((p.windowWidth - sideBarOffset) / 2, p.windowHeight, sideBarOffset);
     });
@@ -90,6 +91,7 @@ new p5(function (p) {
       reducedPoints = [];
     }
     allPoints = [];
+
   }
 
   p.draw = function () {
@@ -98,7 +100,6 @@ new p5(function (p) {
     if (isPressureInit == false) {
       initPressure();
     }
-
 
     if (isDrawing) {
       // Smooth out the position of the pointer 
@@ -142,7 +143,6 @@ new p5(function (p) {
       p.noStroke();
       p.fill(100);
       // p.ellipse(penX, penY, brushSize);
-
 
       // Save the latest brush values for next frame
       prevBrushSize = brushSize;
@@ -244,7 +244,6 @@ function initPressure() {
 
 }
 
-
 // Disabling scrolling and bouncing on iOS Safari
 // https://stackoverflow.com/questions/7768269/ipad-safari-disable-scrolling-and-bounce-effect
 
@@ -311,4 +310,4 @@ function sendToRunway(w, h, sideBarOffset) {
       };
       img.src = image;
     });
-} 
+}

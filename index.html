@@ -1,58 +1,31 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html><html>
+  <head>
     <script src="p5.min.js"></script>
     <script src="p5.dom.min.js"></script>
     <script src="pressure.min.js"></script>
     <script src="oneEuroFilter.min.js"></script>
-    <script src="importImageFile.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
-    
-
   </head>
-  <body>
+    <body>
     <div class="sidenav">
       <!-- Icons on the side bar -->
       <!-- Change this with the final app logo whn ready -->
-      <img id="Logo" type="Icon"><img src="icon/GANgaroo_bw.svg"/></img>
       <button id="ClearButton" type="button"><img src="icon/draw.svg"/></button>
-      <button id="myFileInput" type="button"><img src="icon/uploadV2.svg" /></button>
+      <button id="uploadButton" type="button"><img src="icon/uploadV2.svg" /></button>
       <button id="undo" type="button"><img src="icon/undo-solid.svg" /></button>
       <button id="redo" type="button"><img src="icon/redo-solid.svg" /></button>
       <button onclick="PopWindowOne()" id="to3DModel" type="button"><img src="icon/to3dModel.svg" /></button>
-      <input type="file" id="mypic" style="display: none" accept="image/*" capture="camera"/>
-      
-
-      <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
-      <script>
-        $("#myFileInput").on("click", function() {
-          $("#mypic").trigger("click");
-        });
-      </script>
-
-      <script language="JavaScript">
-        function PopWindowOne()
-        {
-            let width = window.innerWidth*0.8;
-            let height = window.innerHeight*0.8;
-            let leftMargin = window.innerWidth*0.1;
-            let topMargin = window.innerHeight*0.1;
-            floatingWindow = window.open("meshViewer.html","",`height=${height},width=${width},left=${leftMargin},top=${topMargin},scrollbars=no`);
-        }
-      </script>
-
-
+      <input type="file" id="imageInput" style="display: none" accept="image/*" capture="camera"/>
     </div>
-
 
     <div class="main">
-      <!-- <canvas id="drawingCanvas"></canvas> -->
-      <!-- <canvas></canvas> -->
+      <div class = "imageContainer" id="container">
+        <img src="" id="referenceImage">
+      </div>
       <script src="rdp.js"></script>
-      <script src="sketch.js"></script>
       <script src="importImageFile.js"></script>
+      <script src="sketch.js"></script>
     </div>
-
-</body>
+  </body>
 </html>
-
-
