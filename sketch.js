@@ -48,8 +48,6 @@ var allPoints = [];
 var reducedPoints = [];
 var lines = [];
 var redoStack = [];
-const IP = '184.105.174.119';
-const PORT = '8000';
 let sideBarStyle = getComputedStyle(document.getElementsByClassName('sidenav')[0]);
 let sideBarOffset = parseFloat(sideBarStyle.width) + parseFloat(sideBarStyle.paddingLeft) + parseFloat(sideBarStyle.paddingRight);
 
@@ -80,9 +78,6 @@ new p5(function (p) {
       p.background(255);
     });
     
-    drawCanvasElement.addEventListener('img-upload', () => {
-      sendToRunway((p.windowWidth - sideBarOffset), p.windowHeight, sideBarOffset);
-    });
   }
 
   p.mouseReleased = function () {
@@ -202,9 +197,9 @@ new p5(function (p) {
       }
     }
 
-    // document.getElementById("to3DModel").onclick =  () => {
-    //   sendToRunway((p.windowWidth - 180)/2, p.windowHeight);
-    // };
+    document.getElementById("to3DModel").onclick = () => {
+      postSketch();
+    };
 
   }
 }, "p5_instance_01");
@@ -279,43 +274,32 @@ function canvasToModel() {
     linesForBackend.push(linePts);
   });
   console.log(linesForBackend);
+  return linesForBackend;
 }
 
-function sendToRunway(w, h, sideBarOffset) {
+function postSketch() {
   let dcanvas = document.getElementById('drawingCanvas');
   let dataurl = dcanvas.toDataURL();
+  let image  = document.getElementById('referenceImage');
+  
 
-  const inputs = { image: dataurl };
-  fetch(`http://${IP}:${PORT}/query`, {
+  const inputs = { 
+    photo: image.src,
+    sketch: dataurl,
+    metadata: {
+      points: canvasToModel(),
+      time: 0.320,
+      imageMetadata: { name: 'Test Image'}
+
+    }
+  };
+  fetch('https://sketchgansketch.azurewebsites.net/api/postsketch', {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      // Accept: 'application/json',
+      'Content-Type': 'text/plain',
     },
     body: JSON.stringify(inputs),
   })
     .then(response => response.json())
-    .then(outputs => {
-      const { image } = outputs;
-      let imgCanvas = document.getElementById('imageCanvas');
-      if (imgCanvas === null) {
-        let body = document.getElementsByTagName('body')[0];
-        imgCanvas = document.createElement('canvas');
-        imgCanvas.id = "imageCanvas";
-        imgCanvas.width = w;
-        imgCanvas.height = h;
-        imgCanvas.style.position = 'absolute';
-        let offset = sideBarOffset + w;
-        imgCanvas.style.left = `${offset}px`;
-        imgCanvas.style.top = 0;
-        body.append(imgCanvas);
-      }
-      let ctx = imgCanvas.getContext('2d');
-
-      let img = new Image();
-      img.onload = function () {
-        ctx.drawImage(img, 0, 0, w, h);
-      };
-      img.src = image;
-    });
 }
