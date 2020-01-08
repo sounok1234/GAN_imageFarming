@@ -29,6 +29,13 @@ body {
   cursor: move;
 }
 
+.timer {
+  position: absolute;
+  z-index: 100;
+  top: 0px;
+  right: 20px;
+}
+
 #drawingCanvas canvas {
   z-index: -1;
   position: absolute;
