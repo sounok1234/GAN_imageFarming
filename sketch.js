@@ -80,7 +80,7 @@ new p5(function (p) {
     });
     
     drawCanvasElement.addEventListener('img-upload', () => {
-      sendToRunway((p.windowWidth - sideBarOffset) / 2, p.windowHeight, sideBarOffset);
+      sendToRunway((p.windowWidth - sideBarOffset), p.windowHeight, sideBarOffset);
     });
   }
 
