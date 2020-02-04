@@ -6,8 +6,12 @@
     <script src="oneEuroFilter.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
   </head>
-    <body>
+  <body>
     <div class="sidenav">
       <!-- Icons on the side bar -->
       <!-- Change this with the final app logo whn ready -->
@@ -15,7 +19,7 @@
       <button id="uploadButton" type="button"><img src="icon/uploadV2.svg" /></button>
       <button id="undo" type="button"><img src="icon/undo-solid.svg" /></button>
       <button id="redo" type="button"><img src="icon/redo-solid.svg" /></button>
-      <button onclick="PopWindowOne()" id="to3DModel" type="button"><img src="icon/to3dModel.svg" /></button>
+      <button onclick="stopTimer()" id="to3DModel" type="button"><img src="icon/to3dModel.svg" /></button>
       <input type="file" id="imageInput" style="display: none" accept="image/*" capture="camera"/>
     </div>
 
@@ -24,8 +28,13 @@
         <img src="" id="referenceImage">
       </div>
       <script src="rdp.js"></script>
+      <div class = "timer" id="safeTimer">
+        <p id="timerDisplay"></p>
+        <script src="timer.js"></script>
+      </div>
       <script src="importImageFile.js"></script>
       <script src="sketch.js"></script>
     </div>
   </body>
 </html>
+

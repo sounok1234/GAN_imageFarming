@@ -43,6 +43,7 @@ var isPressureInit = false;
 var isDrawing = false;
 var isDrawingJustStarted = false;
 var newLineToDraw = false;
+var newDrawing = true;
 var allPoints = [];
 var reducedPoints = [];
 var lines = [];
@@ -66,7 +67,7 @@ new p5(function (p) {
     disableScroll();
 
     //Initialize the canvas
-    drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset) / 2, p.windowHeight);
+    drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset), p.windowHeight);
     drawCanvas.id("drawingCanvas");
     p.background(255);
     drawCanvas.position(sideBarOffset, 0);
@@ -77,6 +78,9 @@ new p5(function (p) {
       p.background(255);
     });
     
+    drawCanvasElement.addEventListener('img-upload', () => {
+      sendToRunway((p.windowWidth - sideBarOffset), p.windowHeight, sideBarOffset);
+    });
   }
 
   p.mouseReleased = function () {
@@ -106,6 +110,11 @@ new p5(function (p) {
         //console.log("started drawing");
         prevPenX = penX;
         prevPenY = penY;
+      }
+
+      if (newDrawing) {
+        startTimer(0);
+        newDrawing = false;
       }
 
       // Smooth out the pressure
@@ -173,6 +182,8 @@ new p5(function (p) {
       lines = [];
       p.clear();
       p.background(255);
+      clearTimer();
+      newDrawing = true;
     }
 
     function undo() {
