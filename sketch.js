@@ -291,7 +291,7 @@ function postSketch() {
     sketch: dataurl,
     metadata: {
       points: canvasToModel(),
-      time: 0.320,
+      time: timerSeconds,
       imageMetadata: { name: 'Test Image'}
 
     }
