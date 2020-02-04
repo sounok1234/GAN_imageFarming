@@ -68,7 +68,8 @@ new p5(function (p) {
     disableScroll();
 
     //Initialize the canvas
-    drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset) / 2, p.windowHeight);
+    drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset), p.windowHeight);
+    drawCanvas.parent("#drawingCanvasContainer");
     drawCanvas.id("drawingCanvas");
     p.background(255);
     drawCanvas.position(sideBarOffset, 0);

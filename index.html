@@ -19,13 +19,16 @@
       <input type="file" id="imageInput" style="display: none" accept="image/*" capture="camera"/>
     </div>
 
-    <div class="main">
-      <div class = "imageContainer" id="container">
+    <div class="main" id="main">
+      <div class = "imageContainer">
         <img src="" id="referenceImage">
       </div>
+      <div id="drawingCanvasContainer"></div>
+      <div id="modalContainer"></div>
       <script src="rdp.js"></script>
       <script src="importImageFile.js"></script>
       <script src="sketch.js"></script>
+      <script src="prompts.js"></script>
     </div>
   </body>
 </html>
