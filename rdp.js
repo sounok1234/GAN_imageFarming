@@ -1,4 +1,4 @@
-const epsilon = 7;
+const epsilon = 5;
 
 function rdp(startIndex, endIndex, allPoints, rdpPoints) {
     const nextIndex = findFurthest(allPoints, startIndex, endIndex);

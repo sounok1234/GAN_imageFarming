@@ -19,11 +19,15 @@
       <button id="uploadButton" type="button"><img src="icon/uploadV2.svg" /></button>
       <button id="undo" type="button"><img src="icon/undo-solid.svg" /></button>
       <button id="redo" type="button"><img src="icon/redo-solid.svg" /></button>
-      <button onclick="stopTimer()" id="to3DModel" type="button"><img src="icon/to3dModel.svg" /></button>
+      <button id="eraser" type="button"><img src="icon/eraser(1).svg" /></button>
+      
       <input type="file" id="imageInput" style="display: none" accept="image/*" capture="camera"/>
     </div>
 
     <div class="main">
+      <input id="search" type="text" placeholder="search text" />
+      <button id="submit" onclick="JavaScriptFetch()">Submit</button>
+      <div id="outputDiv"></div>
       <div class = "imageContainer" id="container">
         <img src="" id="referenceImage">
       </div>
@@ -33,7 +37,8 @@
         <script src="timer.js"></script>
       </div>
       <script src="importImageFile.js"></script>
-      <script src="sketch.js"></script>
+      <script src="sketch.js"></script>\
+      
     </div>
   </body>
 </html>
