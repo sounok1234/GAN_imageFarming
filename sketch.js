@@ -91,9 +91,9 @@ new p5(function (p) {
 
   p.mouseReleased = function () {
     if (reducedPoints.length > 0 && isDrawing) {
-      for (i = 0; i < (reducedPoints.length-1); i++) {
+      for (let i = 0; i < (reducedPoints.length - 1); i++) {
         lines.push([reducedPoints[i], reducedPoints[i+1]]);
-        redoStack.push({index: i, type:"line", geometry:[reducedPoints[i], reducedPoints[i+1]]});
+        redoStack.push({ index: i, type: "line", geometry: [reducedPoints[i], reducedPoints[i+1]] });
       }
       reducedPoints = [];
     }
@@ -116,7 +116,6 @@ new p5(function (p) {
 
       // What to do on the first frame of the stroke
       if (isDrawingJustStarted) {
-        //console.log("started drawing");
         prevPenX = penX;
         prevPenY = penY;
       }
@@ -155,7 +154,6 @@ new p5(function (p) {
       reducedPoints = simplifyLine(allPoints);
       p.noStroke();
       p.fill(100);
-      // p.ellipse(penX, penY, brushSize);
 
       // Save the latest brush values for next frame
       prevBrushSize = brushSize;
@@ -167,22 +165,18 @@ new p5(function (p) {
 
    if (isErasing) {
     lines.forEach((line, i) =>{
-        if ((intersects(p.mouseX,p.mouseY,p.mouseX,p.mouseY+30,line[0].x,line[0].y,line[1].x,line[1].y) == true) ||
-           (intersects(p.mouseX,p.mouseY+30,p.mouseX+30,p.mouseY+30,line[0].x,line[0].y,line[1].x,line[1].y) == true) ||
-           (intersects(p.mouseX+30,p.mouseY+30,p.mouseX+30,p.mouseY,line[0].x,line[0].y,line[1].x,line[1].y) == true) ||
-           (intersects(p.mouseX+30,p.mouseY,p.mouseX,p.mouseY,line[0].x,line[0].y,line[1].x,line[1].y) == true)) {
-           bool = true} else {
-           bool = false}
-        //console.log(bool)
-        if (bool == true) { 
-          
+      const testPoints = [
+        { x1: p.mouseX, y1: p.mouseY, x2: p.mouseX, y2: p.mouseY + 30 },
+        { x1: p.mouseX, y1: p.mouseY + 30, x2: p.mouseX + 30, y2: p.mouseY + 30 },
+        { x1: p.mouseX + 30, y1: p.mouseY + 30, x2: p.mouseX + 30, y2: p.mouseY },
+        { x1:p.mouseX + 30, y1: p.mouseY, x2: p.mouseX, y2: p.mouseY }
+      ];
+      const anyIntersection = testPoints.some(pts => intersects(pts.x1, pts.y1, pts.x2, pts.y2, line[0].x, line[0].y, line[1].x, line[1].y));
+      if (anyIntersection) { 
           redoStack.push({index: i, type: "erase", geometry:lines[i]});
-          //lines.splice(i, 1, line1, line2)
-          lines.splice(i, 1)
-        } else {}
-      
-    })
-  //console.log(lines)
+          lines.splice(i, 1);
+      }
+    });
   }
 
     if (!isDrawing) {
@@ -213,7 +207,7 @@ new p5(function (p) {
       redoStack = [];
       undoStack = [];
       lines = [];
-      p.clear(); 
+      p.clear();
       p.background(255);
       clearTimer();
       newDrawing = true;
@@ -240,20 +234,15 @@ new p5(function (p) {
    }
 
     function undo() {
-
       if (redoStack.length > 0) {
-      
-          let item = redoStack.pop();
-          
-          if (item.type == "erase") {
-            lines.splice(item.index, 0, item.geometry);
-            undoStack.push({index: item.index, type:item.type, geometry:item.geometry})
-          } else {
-            lines.pop();
-            undoStack.push({index: (lines.length-1), type:"line", geometry:lines[lines.length-1]})
-          }
-    
-          //console.log(redoStack);
+        let item = redoStack.pop();
+        if (item.type == "erase") {
+          lines.splice(item.index, 0, item.geometry);
+          undoStack.push({ index: item.index, type: item.type, geometry: item.geometry });
+        } else {
+          lines.pop();
+          undoStack.push({ index: (lines.length-1), type:"line", geometry: lines[lines.length-1]});
+        }
       }
     }
 
@@ -262,14 +251,11 @@ new p5(function (p) {
         let item = undoStack.pop();
         if (item.type == "erase") {
           lines.splice(item.index, 1);
-          redoStack.push(item)
-          
+          redoStack.push(item);
         } else {
           lines.push(item.geometry);
-          redoStack.push(item)
-          //undoStack.push({index: "", type:"line", geometry:lines[lines.length-1]})
+          redoStack.push(item);
         }
-        
       }
     }
 
@@ -283,8 +269,6 @@ new p5(function (p) {
 // Initializing Pressure.js
 // https://pressurejs.com/documentation.html
 function initPressure() {
-
-  //console.log("Attempting to initialize Pressure.js ");
 
   Pressure.set('#drawingCanvas', {
 
@@ -309,9 +293,7 @@ function initPressure() {
         console.log("Pressure.js initialized successfully");
         isPressureInit = true;
       }
-      //console.log(force);
       pressure = force;
-
     }
   });
 
