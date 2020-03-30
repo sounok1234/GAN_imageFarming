@@ -7,22 +7,26 @@ document.querySelector("#uploadButton").onclick = () => {
 const input = document.querySelector("input[type=file]");
 input.onchange = function() {
   const file = input.files[0];
-  showImage(file);
+  showImageFromFile(file);
 };
 
-const referenceImage = container.querySelector("#referenceImage");
-const imageContainer = document.getElementById("container");
 
-function showImage(file) {
+function showImageFromFile(file) {
   const reader = new FileReader();
 
-  reader.addEventListener("load", async function() {
-    await referenceImage.setAttribute("src", this.result);
-    imageContainer.style.display = "inherit";
-    addTransformHandlers(referenceImage, imageContainer);
+  reader.addEventListener("load", function() {
+    showImage(this.result);
   });
 
   reader.readAsDataURL(file);
+}
+
+async function showImage(src) {
+    const imageContainer = document.getElementById("imageContainer");
+    const referenceImage = document.querySelector("#referenceImage");
+    await referenceImage.setAttribute("src", src);
+    imageContainer.style.display = "inherit";
+    addTransformHandlers(referenceImage, imageContainer);
 }
 
 function addTransformHandlers(element, container) {
