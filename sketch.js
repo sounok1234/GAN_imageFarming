@@ -90,10 +90,10 @@ new p5(function (p) {
   }
 
   p.mouseReleased = function () {
-    if (reducedPoints.length > 0 && isDrawing) {
+    if (reducedPoints.length > 0 && !eraserToolActive) {
       for (let i = 0; i < (reducedPoints.length - 1); i++) {
         lines.push([reducedPoints[i], reducedPoints[i+1]]);
-        redoStack.push({ index: i, type: "line", geometry: [reducedPoints[i], reducedPoints[i+1]] });
+        undoStack.push({ index: i, type: "line", geometry: [reducedPoints[i], reducedPoints[i+1]] });
       }
       reducedPoints = [];
     }
@@ -173,7 +173,7 @@ new p5(function (p) {
       ];
       const anyIntersection = testPoints.some(pts => intersects(pts.x1, pts.y1, pts.x2, pts.y2, line[0].x, line[0].y, line[1].x, line[1].y));
       if (anyIntersection) { 
-          redoStack.push({index: i, type: "erase", geometry:lines[i]});
+          undoStack.push({index: i, type: "erase", geometry:lines[i]});
           lines.splice(i, 1);
       }
     });
@@ -186,15 +186,7 @@ new p5(function (p) {
         p.stroke(0);
         p.strokeWeight(2);
         p.noFill();
-        p.beginShape();
-        
-        line.forEach(v => {
-          if (v) {
-            p.vertex(v.x, v.y);
-          }
-        });
-        p.endShape();
-        
+        p.line(line[0].x, line[0].y, line[1].x, line[1].y);
       });
     }
     // clearing the canvas
@@ -234,27 +226,28 @@ new p5(function (p) {
    }
 
     function undo() {
-      if (redoStack.length > 0) {
-        let item = redoStack.pop();
+      if (undoStack.length > 0) {
+        let item = undoStack.pop();
         if (item.type == "erase") {
           lines.splice(item.index, 0, item.geometry);
-          undoStack.push({ index: item.index, type: item.type, geometry: item.geometry });
+          redoStack.push({ index: item.index, type: item.type, geometry: item.geometry });
         } else {
-          lines.pop();
-          undoStack.push({ index: (lines.length-1), type:"line", geometry: lines[lines.length-1]});
+          let removedLine = lines.pop();
+          let removedIndex = lines.length; // Normally would be length - 1, but we just removed an item at the index
+          redoStack.push({ index: removedIndex, type:"line", geometry: removedLine });
         }
       }
     }
 
     function redo() {
-      if (undoStack.length > 0) {
-        let item = undoStack.pop();
+      if (redoStack.length > 0) {
+        let item = redoStack.pop();
         if (item.type == "erase") {
           lines.splice(item.index, 1);
-          redoStack.push(item);
+          undoStack.push(item);
         } else {
           lines.push(item.geometry);
-          redoStack.push(item);
+          undoStack.push(item);
         }
       }
     }
