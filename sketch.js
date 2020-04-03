@@ -43,6 +43,7 @@ var isPressureInit = false;
 var isDrawing = false;
 var isDrawingJustStarted = false;
 var newLineToDraw = false;
+var newDrawing = true;
 var allPoints = [];
 var reducedPoints = [];
 var lines = [];
@@ -114,6 +115,11 @@ new p5(function (p) {
         prevPenY = penY;
       }
 
+      if (newDrawing) {
+        startTimer(0);
+        newDrawing = false;
+      }
+
       // Smooth out the pressure
       pressure = pFilter.filter(pressure, p.millis());
 
@@ -179,6 +185,8 @@ new p5(function (p) {
       lines = [];
       p.clear();
       p.background(255);
+      clearTimer();
+      newDrawing = true;
     }
 
     function undo() {
