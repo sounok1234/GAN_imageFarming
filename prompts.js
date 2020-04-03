@@ -148,6 +148,10 @@ class Dialog {
       }
       this.dialog = document.createElement("div");
       this.dialog.classList.add("mymodal");
+      
+      this.closeButton = document.createElement("button");
+      this.closeButton.classList.add("btn", "float-right", "close-button");
+      this.closeButton.innerText = "Close";
   
       this.headerContent = document.createElement("h3");
       this.headerContent.classList.add("confirm-dialog-header");
@@ -158,6 +162,7 @@ class Dialog {
       this.questionContent = document.createElement("p");
       this.questionContent.classList.add("confirm-dialog-question");
 
+      this.dialog.appendChild(this.closeButton);
       this.dialog.appendChild(this.headerContent);
       this.dialog.appendChild(this.descriptionContent);
       this.dialog.appendChild(this.questionContent);
@@ -204,6 +209,10 @@ class Dialog {
         this.falseButton.onclick = this.buttonTwo.cb;
       }
     }
+
+    closeDialog() {
+      showDialog('finish');
+    }
 }
 
 function showDialog(stepKey) {
@@ -225,6 +234,8 @@ function showDialog(stepKey) {
 
 document.addEventListener('readystatechange', (event) => {
     if (document.readyState === "complete") {
-      showDialog('step1');
+      let d = showDialog('step1');
+      d.closeButton.onclick = d.closeDialog;
     }
 })
+

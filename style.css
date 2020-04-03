@@ -90,7 +90,7 @@ body {
 .mymodal {
   border: solid 3px black;
   background-color: #fff;
-  padding: 5rem;
+  padding: 5rem 2rem;
   margin: 0 auto;
   margin-top: 4rem;
   width: 45rem;
@@ -108,6 +108,10 @@ body {
 
 .btn {
   margin: 1rem 0.5rem;
+}
+
+.close-button {
+  margin-top: -3rem;
 }
 
 /* When you mouse over the navigation links, change their color */
