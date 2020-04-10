@@ -19,7 +19,7 @@ const dialogQuestions = {
         p.appendChild(uploadDialog);
         dialog.descriptionContent.appendChild(p);
       },
-      falseButtonText: "Provide me with a random one",
+      falseButtonText: "Provide random image",
       falseButtonCallback: () => {
         fetch('https://sketchgansketch.azurewebsites.net/api/randomSelector')
         .then(response => response.blob())
@@ -149,9 +149,9 @@ class Dialog {
       this.dialog = document.createElement("div");
       this.dialog.classList.add("mymodal");
       
-      this.closeButton = document.createElement("button");
-      this.closeButton.classList.add("btn", "float-right", "close-button");
-      this.closeButton.innerText = "Close";
+      //this.closeButton = document.createElement("button");
+      //this.closeButton.classList.add("btn", "float-right", "close-button");
+      //this.closeButton.innerText = "Close";
   
       this.headerContent = document.createElement("h3");
       this.headerContent.classList.add("confirm-dialog-header");
@@ -162,7 +162,7 @@ class Dialog {
       this.questionContent = document.createElement("p");
       this.questionContent.classList.add("confirm-dialog-question");
 
-      this.dialog.appendChild(this.closeButton);
+      //this.dialog.appendChild(this.closeButton);
       this.dialog.appendChild(this.headerContent);
       this.dialog.appendChild(this.descriptionContent);
       this.dialog.appendChild(this.questionContent);
@@ -235,7 +235,7 @@ function showDialog(stepKey) {
 document.addEventListener('readystatechange', (event) => {
     if (document.readyState === "complete") {
       let d = showDialog('step1');
-      d.closeButton.onclick = d.closeDialog;
+      //d.closeButton.onclick = d.closeDialog;
     }
 })
 
