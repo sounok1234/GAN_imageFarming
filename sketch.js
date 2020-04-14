@@ -59,8 +59,8 @@ let sideBarOffset = parseFloat(sideBarStyle.width) + parseFloat(sideBarStyle.pad
 ************************/
 new p5(function (p) {
 
-  p.setup = () => {
-
+    p.setup = () => {
+       
     // Filters used to smooth position and pressure jitter
     xFilter = new OneEuroFilter(60, minCutoff, beta, 1.0);
     yFilter = new OneEuroFilter(60, minCutoff, beta, 1.0);
@@ -71,6 +71,7 @@ new p5(function (p) {
 
     //Initialize the canvas
     drawCanvas = p.createCanvas((p.windowWidth - sideBarOffset), p.windowHeight);
+    drawCanvas.parent("#drawingCanvasContainer");
     drawCanvas.id("drawingCanvas");
     p.background(255);
     drawCanvas.position(sideBarOffset, 0);
