@@ -42,12 +42,15 @@ var drawCanvas, uiCanvas;
 var isPressureInit = false;
 var isDrawing = false;
 var isDrawingJustStarted = false;
+var isErasing = false;
+var eraserToolActive = false;
 var newLineToDraw = false;
 var newDrawing = true;
 var allPoints = [];
 var reducedPoints = [];
 var lines = [];
 var redoStack = [];
+var undoStack = [];
 let sideBarStyle = getComputedStyle(document.getElementsByClassName('sidenav')[0]);
 let sideBarOffset = parseFloat(sideBarStyle.width) + parseFloat(sideBarStyle.paddingLeft) + parseFloat(sideBarStyle.paddingRight);
 
@@ -81,9 +84,11 @@ new p5(function (p) {
   }
 
   p.mouseReleased = function () {
-    if (reducedPoints.length > 0) {
-      lines.push(reducedPoints);
-      redoStack = [];
+    if (reducedPoints.length > 0 && !eraserToolActive) {
+      for (let i = 0; i < (reducedPoints.length - 1); i++) {
+        lines.push([reducedPoints[i], reducedPoints[i+1]]);
+        undoStack.push({ index: i, type: "line", geometry: [reducedPoints[i], reducedPoints[i+1]] });
+      }
       reducedPoints = [];
     }
     allPoints = [];
@@ -98,13 +103,13 @@ new p5(function (p) {
     }
 
     if (isDrawing) {
+
       // Smooth out the position of the pointer 
       penX = xFilter.filter(p.mouseX, p.millis());
       penY = yFilter.filter(p.mouseY, p.millis());
 
       // What to do on the first frame of the stroke
       if (isDrawingJustStarted) {
-        //console.log("started drawing");
         prevPenX = penX;
         prevPenY = penY;
       }
@@ -143,7 +148,6 @@ new p5(function (p) {
       reducedPoints = simplifyLine(allPoints);
       p.noStroke();
       p.fill(100);
-      // p.ellipse(penX, penY, brushSize);
 
       // Save the latest brush values for next frame
       prevBrushSize = brushSize;
@@ -153,6 +157,22 @@ new p5(function (p) {
       isDrawingJustStarted = false;
     }
 
+   if (isErasing) {
+    lines.forEach((line, i) =>{
+      const testPoints = [
+        { x1: p.mouseX, y1: p.mouseY, x2: p.mouseX, y2: p.mouseY + 30 },
+        { x1: p.mouseX, y1: p.mouseY + 30, x2: p.mouseX + 30, y2: p.mouseY + 30 },
+        { x1: p.mouseX + 30, y1: p.mouseY + 30, x2: p.mouseX + 30, y2: p.mouseY },
+        { x1:p.mouseX + 30, y1: p.mouseY, x2: p.mouseX, y2: p.mouseY }
+      ];
+      const anyIntersection = testPoints.some(pts => intersects(pts.x1, pts.y1, pts.x2, pts.y2, line[0].x, line[0].y, line[1].x, line[1].y));
+      if (anyIntersection) { 
+          undoStack.push({index: i, type: "erase", geometry:lines[i]});
+          lines.splice(i, 1);
+      }
+    });
+  }
+
     if (!isDrawing) {
       p.clear();
       p.background(255);
@@ -160,22 +180,18 @@ new p5(function (p) {
         p.stroke(0);
         p.strokeWeight(2);
         p.noFill();
-        p.beginShape();
-        line.forEach(v => {
-          if (v) {
-            p.vertex(v.x, v.y);
-          }
-        });
-        p.endShape();
+        p.line(line[0].x, line[0].y, line[1].x, line[1].y);
       });
     }
     // clearing the canvas
     document.getElementById("ClearButton").onclick = function () { clearCanvas() };
     document.getElementById("undo").onclick = function () { undo() };
     document.getElementById("redo").onclick = function () { redo() };
+    document.getElementById("eraser").onclick = function () { erase() };
 
     function clearCanvas() {
-      redoStack = lines;
+      redoStack = [];
+      undoStack = [];
       lines = [];
       p.clear();
       p.background(255);
@@ -183,23 +199,52 @@ new p5(function (p) {
       newDrawing = true;
     }
 
+    function intersects(a,b,c,d,p,q,r,s) {
+      var det, gamma, lambda;
+      det = (c - a) * (s - q) - (r - p) * (d - b);
+      if (det === 0) {
+        return false;
+      } else {
+        lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
+        gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
+        return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1);
+      }
+    };
+
+    function erase() { 
+      if (drawCanvasElement.classList.toggle("eraser-cursor") == true) {
+        eraserToolActive = true;
+      } else {
+        eraserToolActive = false;
+      }
+   }
+
     function undo() {
-      if (lines.length > 0) {
-        let item = lines.pop();
-        redoStack.push(item);
+      if (undoStack.length > 0) {
+        let item = undoStack.pop();
+        if (item.type == "erase") {
+          lines.splice(item.index, 0, item.geometry);
+          redoStack.push({ index: item.index, type: item.type, geometry: item.geometry });
+        } else {
+          let removedLine = lines.pop();
+          let removedIndex = lines.length; // Normally would be length - 1, but we just removed an item at the index
+          redoStack.push({ index: removedIndex, type:"line", geometry: removedLine });
+        }
       }
     }
 
     function redo() {
       if (redoStack.length > 0) {
         let item = redoStack.pop();
-        lines.push(item);
+        if (item.type == "erase") {
+          lines.splice(item.index, 1);
+          undoStack.push(item);
+        } else {
+          lines.push(item.geometry);
+          undoStack.push(item);
+        }
       }
     }
-
-    document.getElementById("to3DModel").onclick = () => {
-      postSketch();
-    };
 
   }
 }, "p5_instance_01");
@@ -212,17 +257,21 @@ new p5(function (p) {
 // https://pressurejs.com/documentation.html
 function initPressure() {
 
-  //console.log("Attempting to initialize Pressure.js ");
-
   Pressure.set('#drawingCanvas', {
 
     start: function (event) {
       // this is called on force start
-      isDrawing = true;
-      isDrawingJustStarted = true;
+      if (eraserToolActive) {
+        isErasing = true 
+      } else {
+        isDrawing = true;
+        isDrawingJustStarted = true;
+      }
+      
     },
     end: function () {
       // this is called on force end
+      isErasing = false
       isDrawing = false
       pressure = 0;
     },
@@ -231,9 +280,7 @@ function initPressure() {
         console.log("Pressure.js initialized successfully");
         isPressureInit = true;
       }
-      //console.log(force);
       pressure = force;
-
     }
   });
 
