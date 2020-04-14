@@ -116,15 +116,13 @@ const dialogQuestions = {
                         or draw by hand and upload a photo.`,
       questionText:
         "Upload your sketch using the dialog below",
-      trueButtonText: "Upload",
+      trueButtonText: "Upload & Send",
       trueButtonCallback: () => {
         let uploadInput = document.getElementById('modalUpload');
         let file = uploadInput.files[0];
         console.log("I'm uploading these two:", document.getElementById('referenceImage'), file);
         showDialog("finish");
-      },
-      falseButtonText: "Finish",
-      falseButtonCallback: "finish"
+      }
   },
 };
   
