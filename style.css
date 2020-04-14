@@ -51,7 +51,7 @@ body {
 
 /* The sidebar menu */
 .sidenav {
-  height: 100%; /* Full-height: remove this if you want "auto" height */
+  height: 100vh; /* Full-height: remove this if you want "auto" height */
   width: 4rem; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
@@ -59,7 +59,7 @@ body {
   left: 0;
   background-color: rgb(146, 146, 146); /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px;
+  padding-top: 15px;
   padding-left: 20px;
   padding-right: 20px;
   display: flex;
@@ -97,49 +97,100 @@ body {
 .mymodal {
   border: solid 3px black;
   background-color: #fff;
-  padding: 5rem 2rem;
-  margin: 0 auto;
-  margin-top: 4rem;
-  width: 45rem;
+  padding: 1.5rem 1.5rem;
+  margin-left: 7rem;
+  margin-top: 1rem;
+  width: 50rem;
+  height: 20rem;
 }
 
 #modalContainer {
   z-index: 200;
   position: absolute;
   top: 0;
-  left: -2rem;
-  width: calc(100% + 2rem);
+  width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.5);
-}
-
-.btn {
-  margin: 1rem 0.5rem;
-}
-
-.close-button {
-  margin-top: -3rem;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
   color: #f1f1f1;
 }
+.btn {
+  margin: 1rem 0.5rem;
+}
 
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
+@media handheld, screen {
   .sidenav {
-    padding-top: 15px;
-    max-width: 200px;
+    width: 5vw;
   }
-  .sidenav a {font-size: 18px;}
-  
+
+  .sidenav a {
+    font-size: 18px;
+  }
+
   #imageContainer {
-    border: black 20px solid;
+    border: black 15px solid;
+  }
+
+  .mymodal {
+    font-size: 1.8vw;
   }
 }
-@media screen and (max-width: 800px) {
+
+@media handheld, screen and (max-device-width : 850px) and (max-device-height : 450px) {
+  .mymodal {
+    margin-left: calc(5vw + 3rem);
+    width: 70vw;  
+    height: 70vh;  
+   }
+}
+
+@media handheld, screen and (max-device-width : 450px) and (max-device-height : 850px) {
+  .sidenav {
+    width: 7vw;
+  }
+  
+  .mymodal {
+    margin-left: calc(10vw + 3rem);
+    width: 55vw;  
+    height: 70vh;  
+   }
+}
+
+@media handheld, screen and (min-device-width: 850px) and (max-device-width: 1250px) {
+  .sidenav {
+    width: 5vw;
+  }
+
+  .sidenav a {
+    font-size: 20px;
+  }
+
+  .mymodal {
+    margin-left: calc(10vw + 3rem);
+    width: 55vw;  
+    height: 55vh;  
+  }
+}
+
+@media handheld, screen and (min-device-height: 850px) and (max-device-height: 1250px) {
+  .sidenav {
+    width: 7vw;
+  }
+  .sidenav a {
+    font-size: 20px;
+  }
+
   #imageContainer {
-    border: black 20px solid;
+    border: black 15px solid;
+  }
+
+  .mymodal {
+    margin-left: calc(10vw + 3rem);
+    width: 60vw;  
+    height: 60vh;  
   }
 }

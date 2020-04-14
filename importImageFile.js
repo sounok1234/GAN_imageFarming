@@ -1,8 +1,3 @@
-// Connect upload button to hidden file input
-document.querySelector("#uploadButton").onclick = () => {
-  document.querySelector("#imageInput").click();
-};
-
 // Handle file upload
 const input = document.querySelector("input[type=file]");
 input.onchange = function() {
@@ -35,9 +30,9 @@ function addTransformHandlers(element, container) {
   let startX = 0;
   let startY = 0;
   element.onmousedown = dragMouseDown;
-  element.addEventListener("touchstart", dragMouseDown, false);
+  element.addEventListener("touchstart", dragMouseDown, { passive: false });
   container.onmousedown = dragMouseDown;
-  container.addEventListener("touchstart", dragMouseDown, false);
+  container.addEventListener("touchstart", dragMouseDown, { passive: false });
 
   function dragMouseDown(e) {
     e = e || window.event;
@@ -54,13 +49,13 @@ function addTransformHandlers(element, container) {
     }
     if (e.target == element) {
       if (e.type === "touchstart") {
-        document.addEventListener("touchmove", elementDrag, false);
+        document.addEventListener("touchmove", elementDrag, { passive: false });
       } else {
         document.onmousemove = elementDrag;
       }
     } else if (e.target == container) {
       if (e.type === "touchstart") {
-        document.addEventListener("touchmove", resize, false);
+        document.addEventListener("touchmove", resize, { passive: false });
       } else {
         document.onmousemove = resize;
       }
@@ -70,6 +65,7 @@ function addTransformHandlers(element, container) {
   function resize(e) {
     e = e || window.event;
     e.preventDefault();
+    
     // calculate the new cursor position:
     if (e.type === "touchmove") {
       endX = (startX - e.touches[0].clientX) / 2;
@@ -95,8 +91,10 @@ function addTransformHandlers(element, container) {
       // TOP LEFT
       container.style.top = container.offsetTop - endY + "px";
       container.style.left = container.offsetLeft - endX + "px";
-      container.style.width = container.clientWidth + endX + "px";
-    } else if (isBottom && isLeft) {
+      container.style.width = container.clientWidth + endX + "px"; 
+    } 
+   
+    else if (isBottom && isLeft) {
       //BOTTOM LEFT
       container.style.left = container.offsetLeft - endX + "px";
       container.style.width = container.clientWidth + endX + "px";
@@ -110,11 +108,13 @@ function addTransformHandlers(element, container) {
     } else {
       return;
     }
+   
   }
 
   function elementDrag(e) {
     e = e || window.event;
     e.preventDefault();
+    
     // calculate the new cursor position:
     if (e.type === "touchmove") {
       endX = (startX - e.touches[0].clientX) / 2;
@@ -131,7 +131,7 @@ function addTransformHandlers(element, container) {
     container.style.top = container.offsetTop - endY + "px";
     container.style.left = container.offsetLeft - endX + "px";
   }
-
+  
   function closeDragElement() {
     // stop moving when mouse button is released:
     document.onmouseup = null;
