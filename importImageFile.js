@@ -24,6 +24,24 @@ async function showImage(src) {
     addTransformHandlers(referenceImage, imageContainer);
 }
 
+async function URLtoDataURL(url) {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const reader = new FileReader();
+  return new Promise((resolve, reject) => {
+    reader.onloadend = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
+  });
+}
+
+async function fileToDataURL(file) {
+    const reader = new FileReader()
+    const reponse = await reader.readAsDataURL(file)
+}
+
+
+
 function addTransformHandlers(element, container) {
   let endX = 0;
   let endY = 0;

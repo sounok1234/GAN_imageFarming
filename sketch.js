@@ -325,19 +325,32 @@ function canvasToModel() {
   return linesForBackend;
 }
 
-function postSketch() {
+async function postSketch(fromCanvas) {
   let dcanvas = document.getElementById('drawingCanvas');
   let dataurl = dcanvas.toDataURL();
   let image  = document.getElementById('referenceImage');
-  
+  let sketch, photo;
+  let filename = null;
+  if (fromCanvas) {
+    sketch = dataurl
+  } else {
+    let uploadInput = document.getElementById('modalUpload');
+    let file = uploadInput.files[0];
+    filename = file.name;
+    sketch = await fileToDataURL(file);
+  }
+  if (image.src.startsWith('data:')) {
+    photo = image.src;
+  } else {
+    photo = await URLtoDataURL(image.src);
+  }
 
   const inputs = { 
-    photo: image.src,
-    sketch: dataurl,
+    photo,
+    sketch,
     metadata: {
       points: canvasToModel(),
-      time: timerSeconds,
-      imageMetadata: { name: 'Test Image'}
+      imageMetadata: { name: filename}
 
     }
   };
