@@ -21,7 +21,7 @@ const dialogQuestions = {
       },
       falseButtonText: "Provide random image",
       falseButtonCallback: () => {
-        fetch('https://sketchgansketch.azurewebsites.net/api/randomSelector')
+        fetch('https://us-central1-sketchgan-256220.cloudfunctions.net/randomFlickrImage')
         .then(response => response.blob())
         .then(blob => URL.createObjectURL(blob))
         .then(url => {
@@ -61,7 +61,7 @@ const dialogQuestions = {
       questionText: "Would you like to use this image?",
       trueButtonText: "No, give me another",
       trueButtonCallback: () => {
-        fetch('https://sketchgansketch.azurewebsites.net/api/randomSelector')
+        fetch('https://us-central1-sketchgan-256220.cloudfunctions.net/randomFlickrImage')
         .then(response => response.blob())
         .then(blob => URL.createObjectURL(blob))
         .then(url => {
