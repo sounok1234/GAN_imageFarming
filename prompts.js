@@ -140,7 +140,7 @@ class Dialog {
     this.buttonTwo = { text: button2Text, cb: button2Callback };
   }
 
-      // showModal
+    // showModal
     // Set up the div + placeholders
     setupDialog() {
       if (this.parent.childElementCount > 0) {
@@ -149,10 +149,6 @@ class Dialog {
       this.dialog = document.createElement("div");
       this.dialog.classList.add("mymodal");
       
-      //this.closeButton = document.createElement("button");
-      //this.closeButton.classList.add("btn", "float-right", "close-button");
-      //this.closeButton.innerText = "Close";
-  
       this.headerContent = document.createElement("h3");
       this.headerContent.classList.add("confirm-dialog-header");
 
@@ -162,7 +158,6 @@ class Dialog {
       this.questionContent = document.createElement("p");
       this.questionContent.classList.add("confirm-dialog-question");
 
-      //this.dialog.appendChild(this.closeButton);
       this.dialog.appendChild(this.headerContent);
       this.dialog.appendChild(this.descriptionContent);
       this.dialog.appendChild(this.questionContent);
@@ -235,7 +230,6 @@ function showDialog(stepKey) {
 document.addEventListener('readystatechange', (event) => {
     if (document.readyState === "complete") {
       let d = showDialog('step1');
-      //d.closeButton.onclick = d.closeDialog;
     }
 })
 

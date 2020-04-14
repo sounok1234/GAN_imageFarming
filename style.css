@@ -51,7 +51,7 @@ body {
 
 /* The sidebar menu */
 .sidenav {
-  height: 100%; /* Full-height: remove this if you want "auto" height */
+  height: 100vh; /* Full-height: remove this if you want "auto" height */
   width: 4rem; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
@@ -59,7 +59,7 @@ body {
   left: 0;
   background-color: rgb(146, 146, 146); /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px;
+  padding-top: 15px;
   padding-left: 20px;
   padding-right: 20px;
   display: flex;
@@ -108,7 +108,6 @@ body {
   z-index: 200;
   position: absolute;
   top: 0;
-  left: 0rem;
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.5);
@@ -123,78 +122,67 @@ body {
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
-
-@media handheld, screen and (max-device-width : 850px) and (max-device-height : 450px) {
+@media handheld, screen {
   .sidenav {
-    padding-top: 15px;
     width: 5vw;
-    height: 100vh;
   }
-  
-  .sidenav a {font-size: 18px;}
-  
+
+  .sidenav a {
+    font-size: 18px;
+  }
+
   #imageContainer {
     border: black 15px solid;
-    
   }
+
+  .mymodal {
+    font-size: 1.8vw;
+  }
+}
+
+@media handheld, screen and (max-device-width : 850px) and (max-device-height : 450px) {
   .mymodal {
     margin-left: calc(5vw + 3rem);
     width: 70vw;  
     height: 70vh;  
-    font-size: 1.8vw;
-    
    }
 }
 
 @media handheld, screen and (max-device-width : 450px) and (max-device-height : 850px) {
   .sidenav {
-    padding-top: 15px;
     width: 7vw;
-    height: 100vh;
   }
-  .sidenav a {font-size: 18px;}
   
-  #imageContainer {
-    border: black 15px solid;
-    
-  }
-
   .mymodal {
     margin-left: calc(10vw + 3rem);
     width: 55vw;  
     height: 70vh;  
-    font-size: 1.8vh;
-    
    }
 }
 
 @media handheld, screen and (min-device-width: 850px) and (max-device-width: 1250px) {
   .sidenav {
-    padding-top: 15px;
     width: 5vw;
-    height: 100vh;        
   }
-  .sidenav a {font-size: 20px;}
 
-  #imageContainer {
-    border: black 15px solid;
+  .sidenav a {
+    font-size: 20px;
   }
 
   .mymodal {
     margin-left: calc(10vw + 3rem);
     width: 55vw;  
     height: 55vh;  
-    font-size: 1.8vw;
   }
 }
 
 @media handheld, screen and (min-device-height: 850px) and (max-device-height: 1250px) {
   .sidenav {
-    padding-top: 15px;
     width: 7vw;
-    height: 100vh;        
   }
-  .sidenav a {font-size: 20px;}
+  .sidenav a {
+    font-size: 20px;
+  }
 
   #imageContainer {
     border: black 15px solid;
@@ -204,6 +192,5 @@ body {
     margin-left: calc(10vw + 3rem);
     width: 60vw;  
     height: 60vh;  
-    font-size: 1.8vh;
   }
 }

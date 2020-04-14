@@ -53,13 +53,11 @@ const PORT = '8000';
 let sideBarStyle = getComputedStyle(document.getElementsByClassName('sidenav')[0]);
 let sideBarOffset = parseFloat(sideBarStyle.width) + parseFloat(sideBarStyle.paddingLeft) + parseFloat(sideBarStyle.paddingRight);
 
-
-
-
 /***********************
 *    DRAWING CANVAS    *
 ************************/
 new p5(function (p) {
+
     p.setup = () => {
        
     // Filters used to smooth position and pressure jitter
@@ -181,7 +179,6 @@ new p5(function (p) {
     document.getElementById("ClearButton").onclick = function () { clearCanvas() };
     document.getElementById("undo").onclick = function () { undo() };
     document.getElementById("redo").onclick = function () { redo() };
-   
 
     function clearCanvas() {
       redoStack = lines;
