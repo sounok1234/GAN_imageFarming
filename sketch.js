@@ -51,8 +51,6 @@ var reducedPoints = [];
 var lines = [];
 var redoStack = [];
 var undoStack = [];
-const IP = '184.105.174.119';
-const PORT = '8000';
 let sideBarStyle = getComputedStyle(document.getElementsByClassName('sidenav')[0]);
 let sideBarOffset = parseFloat(sideBarStyle.width) + parseFloat(sideBarStyle.paddingLeft) + parseFloat(sideBarStyle.paddingRight);
 
@@ -81,10 +79,6 @@ new p5(function (p) {
       lines = [];
       p.clear();
       p.background(255);
-    });
-    
-    drawCanvasElement.addEventListener('img-upload', () => {
-      sendToRunway((p.windowWidth - sideBarOffset), p.windowHeight, sideBarOffset);
     });
     
   }
@@ -315,7 +309,44 @@ function enableScroll(){
     document.body.removeEventListener('touchmove', preventDefault, { passive: false });
 }*/
 
+function canvasToModel() {
+  let linesForBackend = [];
+  lines.forEach(line => {
+    let linePts = [];
+    if (line.length > 0) {
+      line.forEach(pt => {
+        linePts.push([pt.x, pt.y]);
+      });
+    }
+    linesForBackend.push(linePts);
+  });
+  console.log(linesForBackend);
+  return linesForBackend;
+}
 
+function postSketch() {
+  let dcanvas = document.getElementById('drawingCanvas');
+  let dataurl = dcanvas.toDataURL();
+  let image  = document.getElementById('referenceImage');
+  
 
+  const inputs = { 
+    photo: image.src,
+    sketch: dataurl,
+    metadata: {
+      points: canvasToModel(),
+      time: timerSeconds,
+      imageMetadata: { name: 'Test Image'}
 
-
+    }
+  };
+  fetch('https://sketchgansketch.azurewebsites.net/api/postsketch', {
+    method: 'POST',
+    headers: {
+      // Accept: 'application/json',
+      'Content-Type': 'text/plain',
+    },
+    body: JSON.stringify(inputs),
+  })
+    .then(response => response.json())
+}
