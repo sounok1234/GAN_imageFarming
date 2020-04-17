@@ -29,15 +29,19 @@ async function URLtoDataURL(url) {
   const blob = await response.blob();
   const reader = new FileReader();
   return new Promise((resolve, reject) => {
-    reader.onloadend = () => resolve(reader.result)
-    reader.onerror = reject
-    reader.readAsDataURL(blob)
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
   });
 }
 
 async function fileToDataURL(file) {
-    const reader = new FileReader()
-    const reponse = await reader.readAsDataURL(file)
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
 }
 
 

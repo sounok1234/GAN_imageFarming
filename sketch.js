@@ -350,8 +350,8 @@ async function postSketch(fromCanvas) {
     sketch,
     metadata: {
       points: canvasToModel(),
-      imageMetadata: { name: filename}
-
+      imageMetadata: { name: filename},
+      id: uuidv4()
     }
   };
   fetch('https://sketchgansketch.azurewebsites.net/api/postsketch', {
